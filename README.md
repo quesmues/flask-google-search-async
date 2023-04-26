@@ -46,6 +46,7 @@ Exemplo:
 
 ## 📄 Endpoints
 O endpoint "api/v1/scrap-google-search" possui um parâmetro obrigatório que é o "search" utilizado para realizar a pesquisa no Google.
+Possui suporte para múltiplas pesquisar, exemplo: "search=teste1&search=teste2&..."
 
 ```
 http://127.0.0.1:8000/api/v1/scrap-google-search?search=test
