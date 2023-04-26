@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 
-WORKDIR /home/flask-api
+WORKDIR /home/flask_api
 
 COPY flask_api .
 
