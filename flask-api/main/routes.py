@@ -1,3 +1,4 @@
+import asyncio
 import time
 from urllib.parse import quote
 
@@ -12,18 +13,18 @@ scrap_google = Blueprint('scrap_google', __name__)
 metrics = []
 
 
-async def get_search_data(search: str):
+async def get_search_data(search: str) -> dict:
     """
     Função assíncrona que retorna os 5 primeiros links da pesquisa do Google
 
     :param search: Texto a ser buscado na pesquisa do Google
-    :return: Uma lista com os primeiros 5 links da pesquisa do Google
+    :return: Um dicionário com o termo pesquisado e os primeiros 5 links da pesquisa do Google
     """
     global metrics
+    links = []
     url = current_app.config['GOOGLE_URL'] + f"/search?q={quote(search)}"
     headers = current_app.config['BROWSER_HEADER']
     start = time.time()
-    links = []
     async with aiohttp.ClientSession(headers=headers) as session:
         response = await session.get(url, allow_redirects=True, timeout=30)
         body = await response.text()
@@ -31,25 +32,29 @@ async def get_search_data(search: str):
         for result in soup.select('.tF2Cxc', limit=5):
             links.append(result.select_one('.yuRUbf a')['href'])
     end = time.time()
-    data = {
+    metrics.append({
         "search_text": search,
         "response_time": end - start
+    })
+    return {
+        "search_text": search,
+        "links": links
     }
-    metrics.append(data)
-    return links
 
 
 class ScrapGoogleSearchView(View):
     """
     View que faz uma busca no Google de forma assíncrona,
-    e retorna os 5 primeiros links que o Google respondeu
+    e retorna os 5 primeiros links que o Google respondeu.
+    Possui suporte para multiplas pesquisas simultâneas.
+    Ex: search=teste1&search=teste2&...
     """
     async def dispatch_request(self):
-        args = request.args.to_dict()
-        search = args.get("search", None)
+        search = request.args.getlist("search")
         if not search:
             return {"error": "Parâmetros obrigatórios não informados!"}
-        done = await get_search_data(search)
+        tasks = [asyncio.create_task(get_search_data(x)) for x in search]
+        done = await asyncio.gather(*tasks)
         return done
 
 
