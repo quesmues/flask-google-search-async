@@ -1,8 +1,8 @@
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask
 
-from config import Config
-from main.routes import scrap_google
+from flask_api.config import Config
+from flask_api.main.routes import scrap_google
 
 app = Flask(__name__)
 app.config.from_object(Config)
