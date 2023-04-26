@@ -2,18 +2,18 @@
 
 O projeto é uma API de Web Scrapping, onde é retornado os 5 primeiros links da pesquisa do Google conforme a pesquisa informada.
 
-## 🚀 Começando
+## Começando
 
 Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
 
-Consulte **[Implantação](#-implanta%C3%A7%C3%A3o)** para saber como implantar o projeto.
+Consulte **Implantação** para saber como implantar o projeto.
 
-### 📋 Pré-requisitos
+### Pré-requisitos
 
 Instale o Python 3.10.
 
 
-### 🔧 Instalação
+### Instalação
 
 Para rodar o projeto em seu computador, primeiro instale os depências com:
 
@@ -44,7 +44,7 @@ Exemplo:
 "https://melhorescolha.com/speedtest/"]
 ```
 
-## 📄 Endpoints
+## Endpoints
 O endpoint "api/v1/scrap-google-search" possui um parâmetro obrigatório que é o "search" utilizado para realizar a pesquisa no Google.
 Possui suporte para múltiplas pesquisar, exemplo: "search=teste1&search=teste2&..."
 
@@ -57,7 +57,7 @@ E o endpoint das métricas do sistemas, retorna o tempo médio e o termo de pesq
 http://127.0.0.1:8000/api/v1/metrics
 ```
 
-## 📦 Implantação
+## Implantação
 
 Para implementar um servidor produtivo, instalar o docker e executar o comando abaixo:
 
@@ -77,11 +77,21 @@ hypercorn flask-api/app:asgi_app
 
 Lembrando que o "flask-api/app" é o módulo em que o app ASGI do flask está.
 
-## 🛠️ Construído com
+## Tests
+
+Os tests foram feitos utilizando o pytest, para executar apenas rodar o comando abaixo.
+
+```
+pytest
+```
+
+
+
+## Construído com
 
 Flask, Aiohttp e BeaultifulSoap4.
 
 
-## ✒️ Autor
+## Autor
 
 * **Eduardo Czamanski Rota** - *Trabalho Inicial* - [Eduardo C. Rota](https://github.com/quesmues)
