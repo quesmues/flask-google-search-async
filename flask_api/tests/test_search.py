@@ -1,7 +1,7 @@
 import pytest
 
-from app import app
-from main.routes import get_search_data
+from flask_api.app import app
+from flask_api.main.routes import get_search_data
 
 
 @pytest.fixture(scope='module')
