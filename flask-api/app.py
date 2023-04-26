@@ -10,6 +10,6 @@ app.config.from_object(Config)
 app.register_blueprint(scrap_google, url_prefix="/api/v1")
 
 if "__main__" == __name__:
-    app.run()
+    app.run(port=8000)
 
 asgi_app = WsgiToAsgi(app)
