@@ -18,13 +18,13 @@ Instale o Python 3.10.
 Para rodar o projeto em seu computador, primeiro instale os depências com:
 
 ```
-pip install -r flask-api/requirements.txt
+pip install -r flask_api/requirements.txt
 ```
 
 Após isso rodar o Flask em modo de desenvolvimento:
 
 ```
-python flask-api/app.py
+python flask_api/app.py
 ```
 
 Para verificar se o projeto está rodando abra no seu navegador e insira o endereço abaixo.
@@ -72,10 +72,10 @@ Ou se prefir utilizar um servidor produtivo que tenha suporte para uso do Flask 
 Exemplo com o Hypercorn:
 
 ```
-hypercorn flask-api/app:asgi_app
+hypercorn flask_api/app:asgi_app
 ```
 
-Lembrando que o "flask-api/app" é o módulo em que o app ASGI do flask está.
+Lembrando que o "flask_api/app" é o módulo em que o app ASGI do flask está.
 
 ## Tests
 
