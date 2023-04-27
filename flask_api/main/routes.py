@@ -64,9 +64,7 @@ class GetMetricsView(View):
     Metricas das requisições da view `ScrapGoogleSearchView`
     """
     async def dispatch_request(self):
-        manager_dict = dict(current_app.config['MULTI_DICT_MANAGER'])
-        manager_dict.update({"pid": current_app.config['PID']})
-        return manager_dict
+        return dict(current_app.config['MULTI_DICT_MANAGER'])
 
 
 scrap_google.add_url_rule(
