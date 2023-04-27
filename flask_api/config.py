@@ -2,12 +2,12 @@ import os
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
+global_objects = {}
 
 class Config:
     """
     Arquivo de configuração do Flask
     """
-
     SECRET_KEY = "28465d8dfeefa59211639cacd4b5cdc6"
     GOOGLE_URL = "https://www.google.com"
     BROWSER_HEADER = {
@@ -16,3 +16,5 @@ class Config:
         "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "en-US,en;q=0.9,lt;q=0.8,et;q=0.7,de;q=0.6",
     }
+    MULTI_DICT_MANAGER = None
+    PID = None

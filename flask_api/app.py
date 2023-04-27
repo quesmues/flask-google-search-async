@@ -1,14 +1,8 @@
-import asyncio
-import os
-
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask
 
 from config import Config
 from main.routes import scrap_google
-
-if os.name == 'nt':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 app = Flask(__name__)
 app.config.from_object(Config)
