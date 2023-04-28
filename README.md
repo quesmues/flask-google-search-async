@@ -77,6 +77,9 @@ hypercorn flask_api/app:asgi_app
 
 Lembrando que o "flask_api/app" é o módulo em que o app ASGI do flask está.
 
+Caso opte por rodar em outro servidor a funcionalidade do endpoint /api/v1/metrics será alterada para variavel global, ou seja, as metricas serão salvas dispersas entre a quantidade de workers, 
+já que variáveis globais não são compartilhadas entre processos.
+
 ## Tests
 
 Os tests foram feitos utilizando o pytest, para executar apenas rodar o comando abaixo.
