@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 
 scrap_google = Blueprint('scrap_google', __name__)
 
+metrics = []
+
 
 async def get_search_data(search: str) -> dict:
     """
@@ -34,6 +36,20 @@ async def get_search_data(search: str) -> dict:
     }
 
 
+async def set_metrics_multiprocessing(data):
+    if current_app.config['MULTI_DICT_MANAGER']:
+        with multiprocessing.Lock() as _:
+            metrics = current_app.config['MULTI_DICT_MANAGER']["metrics"]
+            metrics.append(data)
+            current_app.config['MULTI_DICT_MANAGER'].update({"metrics": metrics})
+
+
+async def set_metrics_global(data):
+    if not current_app.config['MULTI_DICT_MANAGER']:
+        global metrics
+        metrics.append(data)
+
+
 class ScrapGoogleSearchView(View):
     """
     View que faz uma busca no Google de forma assíncrona,
@@ -49,13 +65,12 @@ class ScrapGoogleSearchView(View):
         tasks = [asyncio.create_task(get_search_data(x)) for x in search]
         done = await asyncio.gather(*tasks)
         end = time.time()
-        with multiprocessing.Lock() as _:
-            metrics = current_app.config['MULTI_DICT_MANAGER']["metrics"]
-            metrics.append({
-                "search_text": search,
-                "response_time": end - start
-            })
-            current_app.config['MULTI_DICT_MANAGER'].update({"metrics": metrics})
+        data = {
+            "search_text": search,
+            "response_time": end - start
+        }
+        await set_metrics_multiprocessing(data)
+        await set_metrics_global(data)
         return done
 
 
@@ -64,7 +79,11 @@ class GetMetricsView(View):
     Metricas das requisições da view `ScrapGoogleSearchView`
     """
     async def dispatch_request(self):
-        return dict(current_app.config['MULTI_DICT_MANAGER'])
+        data = dict(current_app.config['MULTI_DICT_MANAGER'])
+        if not data:
+            global metrics
+            return metrics
+        return data
 
 
 scrap_google.add_url_rule(
