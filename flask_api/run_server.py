@@ -8,14 +8,14 @@ from multiprocessing.process import BaseProcess
 from os import getpid
 from typing import List
 
-from hypercorn.asyncio import serve, worker_serve
+from hypercorn.asyncio import worker_serve
 from hypercorn.config import Config, Sockets
 from hypercorn.utils import wrap_app
 
 from app import asgi_app
 
 
-def __worker_async(config: Config, manager: DictProxy, sockets: Sockets) -> None:
+def __worker_func(config: Config, manager: DictProxy, sockets: Sockets) -> None:
     asgi_app.wsgi_application.config["MULTI_DICT_MANAGER"] = manager
     asgi_app.wsgi_application.config["PID"] = getpid()
     if platform.system() == "Windows":
@@ -49,12 +49,18 @@ if __name__ == '__main__':
     # Instancia o objeto Manager fora dos processos, para compartilhar ele entre os processos
     manager = Manager().dict()
     manager['metrics'] = []
+
     ctx = get_context("spawn")
 
     sockets = config.create_sockets()
 
-    processes = start_processes(__worker_async, ctx, config, manager, sockets)
+    processes = start_processes(__worker_func, ctx, config, manager, sockets)
     for process in processes:
         process.join()
     for process in processes:
         process.terminate()
+
+    for sock in sockets.secure_sockets:
+        sock.close()
+    for sock in sockets.insecure_sockets:
+        sock.close()
