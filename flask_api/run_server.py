@@ -13,6 +13,7 @@ from hypercorn.config import Config, Sockets
 from hypercorn.utils import wrap_app
 
 from app import asgi_app
+from config import env
 
 
 def __worker_func(config: Config, manager: DictProxy, sockets: Sockets) -> None:
@@ -29,7 +30,7 @@ def __worker_func(config: Config, manager: DictProxy, sockets: Sockets) -> None:
 
 def start_processes(worker_func, ctx, config: Config, manager: DictProxy, sockets: Sockets) -> List[BaseProcess]:
     processes = []
-    for _ in range(4):
+    for _ in range(int(env('WORKERS'))):
         process = ctx.Process(
             target=worker_func,
             kwargs={"config": config, "manager": manager, "sockets": sockets}
@@ -44,7 +45,7 @@ def start_processes(worker_func, ctx, config: Config, manager: DictProxy, socket
 
 if __name__ == '__main__':
     config = Config()
-    config.bind = ["localhost:8000"]
+    config.bind = [f"{env('HOST')}:{env('PORT')}"]
 
     # Instancia o objeto Manager fora dos processos, para compartilhar ele entre os processos
     manager = Manager().dict()

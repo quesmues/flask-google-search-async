@@ -28,6 +28,7 @@ pluggy==1.0.0
 priority==2.0.0
 pytest==7.3.1
 pytest-asyncio==0.21.0
+python-environ==0.4.54
 soupsieve==2.4.1
 toml==0.10.2
 tomli==2.0.1

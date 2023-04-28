@@ -1,14 +1,19 @@
 import os
 
+import environ
+
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
-global_objects = {}
+env = environ.Env()
+environ.Env.read_env()
+
 
 class Config:
     """
     Arquivo de configuração do Flask
     """
-    SECRET_KEY = "28465d8dfeefa59211639cacd4b5cdc6"
+    DEBUG = env('DEBUG')
+    SECRET_KEY = env('SECRET_KEY')
     GOOGLE_URL = "https://www.google.com"
     BROWSER_HEADER = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36",
