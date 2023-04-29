@@ -7,7 +7,18 @@ import aiohttp
 
 URL = "http://localhost:8000/api/v1/scrap-google-search?search={}"
 
-WORDS = ('banana', 'computer', 'coffee', 'beach', 'dog', 'mountain', 'book', 'movie', 'pizza', 'guitar')
+WORDS = (
+    "banana",
+    "computer",
+    "coffee",
+    "beach",
+    "dog",
+    "mountain",
+    "book",
+    "movie",
+    "pizza",
+    "guitar",
+)
 
 
 async def client_task() -> None:
@@ -41,5 +52,3 @@ if "__main__" == __name__:
 
     end = time.time()
     print(f"{qtd} de requisições realizada em {end-start:.2f} segundos!")
-
-
