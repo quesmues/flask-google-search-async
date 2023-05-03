@@ -24,7 +24,7 @@ def __worker_func(config: Config, manager: DictProxy, sockets: Sockets) -> None:
         asgi_app.wsgi_application, "mutiprocessing_manager_dict", manager
     )  # Pequeno hack para passarmos nosso manager a aplicação
     asgi_app.wsgi_application.config["PID"] = getpid()
-    if platform.system() == "Windows":
+    if config.workers > 1 and platform.system() == "Windows":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(
         worker_serve(
@@ -55,7 +55,7 @@ def start_processes(
         List[BaseProcess]: Lista dos processos que foram iniciados
     """
     processes = []
-    for _ in range(int(env("WORKERS"))):
+    for _ in range(config.workers):
         process = ctx.Process(
             target=worker_func,
             kwargs={"config": config, "manager": manager, "sockets": sockets},
@@ -70,11 +70,13 @@ def start_processes(
 
 if __name__ == "__main__":
     """
-    Fluxo de criação do workers produtivos da aplicação, onde precisamos instanciar o objeto Manager e chama o método dict() fora dos processos, pois as váriaveis globais não são compartilhadas entre os workers, e necessitamos disto para nosso endpoint de métricas que são armazenadas em memória
+    Fluxo de criação do workers produtivos da aplicação, onde precisamos instanciar o objeto Manager e chamar o método dict() fora dos processos, pois as váriaveis globais não são compartilhadas entre os workers, e necessitamos disto para nosso endpoint de métricas que são armazenadas em memória
     """
     worker_func: WorkerFunc
+
     config = Config()
     config.bind = [f"{env('HOST')}:{env('PORT')}"]
+    config.workers = int(env("WORKERS"))
 
     manager = Manager().dict()
     manager["metrics"] = []
