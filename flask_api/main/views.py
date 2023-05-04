@@ -32,7 +32,7 @@ async def get_search_data(search: str) -> dict:
 
 async def set_metrics(data):
     global metrics
-    if hasattr(current_app, "mutiprocessing_manager_dict"):
+    if current_app.mutiprocessing_manager_dict:  # type: ignore
         tmp = current_app.mutiprocessing_manager_dict["metrics"]  # type: ignore
         tmp.append(data)
         current_app.mutiprocessing_manager_dict.update({"metrics": tmp})  # type: ignore
@@ -67,7 +67,7 @@ class GetMetricsView(View):
     """
 
     async def dispatch_request(self):
-        if hasattr(current_app, "mutiprocessing_manager_dict"):
+        if current_app.mutiprocessing_manager_dict:  # type: ignore
             return dict(current_app.mutiprocessing_manager_dict)  # type: ignore
         global metrics
         return metrics

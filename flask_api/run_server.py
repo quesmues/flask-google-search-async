@@ -20,9 +20,7 @@ def __worker_func(config: Config, manager: DictProxy, sockets: Sockets) -> None:
     """
     Função do worker, onde setamos o event_loop e servimos a aplicação
     """
-    setattr(
-        asgi_app.wsgi_application, "mutiprocessing_manager_dict", manager
-    )  # Pequeno hack para passarmos nosso manager a aplicação
+    asgi_app.wsgi_application.mutiprocessing_manager_dict = manager
     asgi_app.wsgi_application.config["PID"] = getpid()
     if config.workers > 1 and platform.system() == "Windows":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
