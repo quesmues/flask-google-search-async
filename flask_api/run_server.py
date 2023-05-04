@@ -11,7 +11,7 @@ from typing import List
 from app import asgi_app
 from config import env
 from custom_typing import WorkerFunc
-from hypercorn.asyncio import worker_serve
+from hypercorn.asyncio.run import worker_serve
 from hypercorn.config import Config, Sockets
 from hypercorn.utils import wrap_app
 
@@ -56,7 +56,7 @@ def start_processes(
     """
     processes = []
     for _ in range(config.workers):
-        process = ctx.Process(
+        process = ctx.Process(  # type: ignore
             target=worker_func,
             kwargs={"config": config, "manager": manager, "sockets": sockets},
         )
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     config = Config()
     config.bind = [f"{env('HOST')}:{env('PORT')}"]
-    config.workers = int(env("WORKERS"))
+    config.workers = int(env("WORKERS"))  # type: ignore
 
     manager = Manager().dict()
     manager["metrics"] = []
