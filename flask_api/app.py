@@ -1,3 +1,6 @@
+from multiprocessing.managers import DictProxy
+from typing import Union
+
 from asgiref.wsgi import WsgiToAsgi
 from config import Config, env
 from flask import Flask
@@ -5,14 +8,14 @@ from main.routes import scrap_google
 
 
 class CustomFlask(Flask):
-    _mutiprocessing_manager_dict = None
+    _mutiprocessing_manager_dict: Union[DictProxy, None] = None
 
     @property
-    def mutiprocessing_manager_dict(self):
+    def mutiprocessing_manager_dict(self) -> Union[DictProxy, None]:
         return self._mutiprocessing_manager_dict
 
     @mutiprocessing_manager_dict.setter
-    def mutiprocessing_manager_dict(self, manager):
+    def mutiprocessing_manager_dict(self, manager: DictProxy):
         self._mutiprocessing_manager_dict = manager
 
 

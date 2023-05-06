@@ -52,6 +52,7 @@ def start_processes(
     Returns:
         List[BaseProcess]: Lista dos processos que foram iniciados
     """
+    
     processes = []
     for _ in range(config.workers):
         process = ctx.Process(  # type: ignore
@@ -80,7 +81,7 @@ if __name__ == "__main__":
     manager["metrics"] = []
 
     ctx = get_context("spawn")
-
+    
     sockets = config.create_sockets()
 
     worker_func = __worker_func
